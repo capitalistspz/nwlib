@@ -33,5 +33,10 @@ namespace nw
             static RemoteSpeakerManager s_instance;
             static BOOL s_initialized;
         };
+
+        WUT_CHECK_OFFSET(RemoteSpeakerManager, 0x00, m_initialized);
+        WUT_CHECK_OFFSET(RemoteSpeakerManager, 0x08, m_alarm);
+        WUT_CHECK_OFFSET(RemoteSpeakerManager, 0x60, m_speakers);
+        WUT_CHECK_SIZE(RemoteSpeakerManager, 0x440);
     }
 }

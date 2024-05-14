@@ -82,7 +82,7 @@ namespace snd {
     //! Fields
     public:
         bool m_initialized{false};
-        bool m_isPlaying;
+        bool m_playing;
         bool m_outputEnabled{false};
         bool m_firstStream{false};
         bool m_notificationAvailable{false};
@@ -93,7 +93,7 @@ namespace snd {
         SpeakerCommand m_priorityCmd{SpeakerCommand::NONE};
         SpeakerCommand m_nextCmd{SpeakerCommand::NONE};
         WENCParams m_encodeParams;
-        WUT_UNKNOWN_BYTES(4);
+        WUT_UNKNOWN_BYTES(8);
         WPADChan m_channel;
         SpeakerCallback m_callback{nullptr};
         WUT_UNKNOWN_BYTES(4);
@@ -102,6 +102,22 @@ namespace snd {
         OSTime m_playStartTime;
     };
 
+    WUT_CHECK_OFFSET(RemoteSpeaker, 0x00, m_initialized);
+    WUT_CHECK_OFFSET(RemoteSpeaker, 0x01, m_playing);
+    WUT_CHECK_OFFSET(RemoteSpeaker, 0x02, m_outputEnabled);
+    WUT_CHECK_OFFSET(RemoteSpeaker, 0x03, m_firstStream);
+    WUT_CHECK_OFFSET(RemoteSpeaker, 0x04, m_notificationAvailable);
+    WUT_CHECK_OFFSET(RemoteSpeaker, 0x05, m_cmdInProgress);
+    WUT_CHECK_OFFSET(RemoteSpeaker, 0x06, m_continueAlarmRunning);
+    WUT_CHECK_OFFSET(RemoteSpeaker, 0x07, m_intervalAlarmRunning);
+    WUT_CHECK_OFFSET(RemoteSpeaker, 0x08, m_mode);
+    WUT_CHECK_OFFSET(RemoteSpeaker, 0x0c, m_priorityCmd);
+    WUT_CHECK_OFFSET(RemoteSpeaker, 0x10, m_nextCmd);
+    WUT_CHECK_OFFSET(RemoteSpeaker, 0x14, m_encodeParams);
+    WUT_CHECK_OFFSET(RemoteSpeaker, 0x34, m_channel);
+    WUT_CHECK_OFFSET(RemoteSpeaker, 0x40, m_continueAlarm);
+    WUT_CHECK_OFFSET(RemoteSpeaker, 0x98, m_intervalAlarm);
+    WUT_CHECK_OFFSET(RemoteSpeaker, 0xf0, m_playStartTime);
     WUT_CHECK_SIZE(RemoteSpeaker, 0xf8);
 }
 }
