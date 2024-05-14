@@ -130,7 +130,7 @@ void nw::snd::RemoteSpeaker::IntervalAlarmHandler(OSAlarm *alarm, OSContext *) {
 }
 
 void nw::snd::RemoteSpeaker::SpeakerOnCallback(WPADChan chan, int32_t result) {
-    auto *speakerManager = RemoteSpeakerManager::GetInstance();
+    auto *speakerManager = internal::RemoteSpeakerManager::GetInstance();
     auto *speaker = speakerManager->GetRemoteSpeaker(chan);
     if (result == 0) {
         speaker->m_firstStream = true;
@@ -147,7 +147,7 @@ void nw::snd::RemoteSpeaker::SpeakerOnCallback(WPADChan chan, int32_t result) {
 }
 
 void nw::snd::RemoteSpeaker::SpeakerOffCallback(WPADChan chan, int32_t result) {
-    auto *speakerManager = RemoteSpeakerManager::GetInstance();
+    auto *speakerManager = internal::RemoteSpeakerManager::GetInstance();
     auto *speaker = speakerManager->GetRemoteSpeaker(chan);
     if (result == -2) {
         speaker->m_nextCmd = SpeakerCommand::FINALIZE;
@@ -159,7 +159,7 @@ void nw::snd::RemoteSpeaker::SpeakerOffCallback(WPADChan chan, int32_t result) {
 }
 
 void nw::snd::RemoteSpeaker::SpeakerPlayCallback(WPADChan chan, int32_t result) {
-    auto *speakerManager = RemoteSpeakerManager::GetInstance();
+    auto *speakerManager = internal::RemoteSpeakerManager::GetInstance();
     auto *speaker = speakerManager->GetRemoteSpeaker(chan);
     if (result == -2) {
         speaker->m_nextCmd = SpeakerCommand::PLAY;

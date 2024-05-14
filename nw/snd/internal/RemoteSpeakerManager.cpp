@@ -1,7 +1,7 @@
 #include "RemoteSpeakerManager.h"
 #include "../notyetwut/sndcore2.h"
 
-nw::snd::RemoteSpeakerManager::RemoteSpeakerManager() {
+nw::snd::internal::RemoteSpeakerManager::RemoteSpeakerManager() {
     m_initialized = true;
     for (auto i = 0; i < 4; ++i) {
         m_speakers[i] = RemoteSpeaker();
@@ -9,7 +9,7 @@ nw::snd::RemoteSpeakerManager::RemoteSpeakerManager() {
     }
 }
 
-void nw::snd::RemoteSpeakerManager::Initialize() {
+void nw::snd::internal::RemoteSpeakerManager::Initialize() {
     if (m_initialized)
         return;
     OSCreateAlarm(&m_alarm);
@@ -20,7 +20,7 @@ void nw::snd::RemoteSpeakerManager::Initialize() {
     m_initialized = true;
 }
 
-void nw::snd::RemoteSpeakerManager::Finalize() {
+void nw::snd::internal::RemoteSpeakerManager::Finalize() {
     if (m_initialized)
     {
         OSCancelAlarm(&m_alarm);
@@ -28,7 +28,7 @@ void nw::snd::RemoteSpeakerManager::Finalize() {
     }
 }
 
-void nw::snd::RemoteSpeakerManager::RemoteSpeakerAlarmProc(OSAlarm *alarm, OSContext *context) {
+void nw::snd::internal::RemoteSpeakerManager::RemoteSpeakerAlarmProc(OSAlarm *alarm, OSContext *context) {
     auto *manager = GetInstance();
     const auto samplesLeft = AXRmtGetSamplesLeft();
     int16_t samples[40];
@@ -45,7 +45,7 @@ void nw::snd::RemoteSpeakerManager::RemoteSpeakerAlarmProc(OSAlarm *alarm, OSCon
 
 }
 
-nw::snd::RemoteSpeakerManager *nw::snd::RemoteSpeakerManager::GetInstance() {
+nw::snd::internal::RemoteSpeakerManager *nw::snd::internal::RemoteSpeakerManager::GetInstance() {
     if (!s_initialized) {
         s_initialized = true;
         s_instance = RemoteSpeakerManager();
@@ -53,7 +53,7 @@ nw::snd::RemoteSpeakerManager *nw::snd::RemoteSpeakerManager::GetInstance() {
     return &s_instance;
 }
 
-nw::snd::RemoteSpeaker *nw::snd::RemoteSpeakerManager::GetRemoteSpeaker(WPADChan chan) {
+nw::snd::RemoteSpeaker *nw::snd::internal::RemoteSpeakerManager::GetRemoteSpeaker(WPADChan chan) {
     return m_speakers + chan;
 }
 
