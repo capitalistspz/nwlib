@@ -20,6 +20,14 @@ void nw::snd::RemoteSpeakerManager::Initialize() {
     m_initialized = true;
 }
 
+void nw::snd::RemoteSpeakerManager::Finalize() {
+    if (m_initialized)
+    {
+        OSCancelAlarm(&m_alarm);
+        m_initialized = false;
+    }
+}
+
 void nw::snd::RemoteSpeakerManager::RemoteSpeakerAlarmProc(OSAlarm *alarm, OSContext *context) {
     auto *manager = GetInstance();
     const auto samplesLeft = AXRmtGetSamplesLeft();
@@ -48,5 +56,4 @@ nw::snd::RemoteSpeakerManager *nw::snd::RemoteSpeakerManager::GetInstance() {
 nw::snd::RemoteSpeaker *nw::snd::RemoteSpeakerManager::GetRemoteSpeaker(WPADChan chan) {
     return m_speakers + chan;
 }
-
 

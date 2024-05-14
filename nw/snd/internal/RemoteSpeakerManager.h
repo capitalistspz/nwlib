@@ -6,23 +6,32 @@ namespace nw
     namespace snd
     {
         class RemoteSpeakerManager {
-            RemoteSpeakerManager();
+        //! Methods
         public:
+            //! __ct__Q4_2nw3snd8internal20RemoteSpeakerManagerFv
+            RemoteSpeakerManager();
+            //! Initialize__Q4_2nw3snd8internal20RemoteSpeakerManagerFv
             void Initialize();
+            //! Finalize__Q4_2nw3snd8internal20RemoteSpeakerManagerFv
+            void Finalize();
+            //! GetRemoteSpeaker__Q4_2nw3snd8internal20RemoteSpeakerManagerFi
             RemoteSpeaker* GetRemoteSpeaker(WPADChan chan);
+        //! Static Methods
+        public:
+            //! GetInstance__Q4_2nw3snd8internal20RemoteSpeakerManagerSFv
             static RemoteSpeakerManager* GetInstance();
+            //! RemoteSpeakerAlarmProc__Q4_2nw3snd8internal20RemoteSpeakerManagerSFP7OSAlarmP9OSContext
             static void RemoteSpeakerAlarmProc(OSAlarm* alarm, OSContext* context);
-
+        //! Fields
+        public:
+            bool m_initialized;
+            WUT_UNKNOWN_BYTES(7);
+            OSAlarm m_alarm;
+            RemoteSpeaker m_speakers[4];
+        // Non-exports
         private:
             static RemoteSpeakerManager s_instance;
             static BOOL s_initialized;
-        private:
-            bool m_initialized;
-            uint8_t field1;
-            WUT_UNKNOWN_BYTES(6);
-            OSAlarm m_alarm;
-            RemoteSpeaker m_speakers[4];
         };
-
     }
 }
