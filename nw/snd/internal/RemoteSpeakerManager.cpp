@@ -32,16 +32,16 @@ void nw::snd::internal::RemoteSpeakerManager::RemoteSpeakerAlarmProc(OSAlarm *al
     auto *manager = GetInstance();
     const auto samplesLeft = AXRmtGetSamplesLeft();
     int16_t samples[40];
-    if (samplesLeft < 0x28)
+    if (samplesLeft < 40)
         return;
     for (auto i = 0; i < 4; ++i) {
         if (manager->m_speakers[i].m_mode == RemoteSpeaker::SpeakerMode::READY) {
-            AXRmtGetSamples(i, samples, 0x28);
+            AXRmtGetSamples(i, samples, 40);
             manager->m_speakers[i].UpdateStreamData(samples);
         }
         manager->m_speakers[i].Update();
     }
-    AXRmtAdvancePtr(0x28);
+    AXRmtAdvancePtr(40);
 
 }
 

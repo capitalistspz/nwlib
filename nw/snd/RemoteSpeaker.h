@@ -57,14 +57,14 @@ public:
     //! Update_Q3_2nw3snd13RemoteSpeakerFv
     void Update();
     //! UpdateStreamData_Q3_2nw3snd13RemoteSpeakerFCs
-    void UpdateStreamData(const short *samples);
+    void UpdateStreamData(const int16_t *samples);
     //! ClearParam_Q3_2nw3snd13RemoteSpeakerFv
     void ClearParam();
 
     void InitParam();
 
     //! IsAllSampleZero__Q3_2nw3snd13RemoteSpeakerFPCs
-    BOOL IsAllSampleZero(const short *samples) const;
+    BOOL IsAllSampleZero(const int16_t *samples) const;
 
     //! NotifyCallback__Q3_2nw3snd13RemoteSpeakerFiT1
     void NotifyCallback(WPADChan chan, int32_t result);
@@ -95,7 +95,6 @@ public:
     SpeakerCommand m_priorityCmd{SpeakerCommand::NONE};
     SpeakerCommand m_nextCmd{SpeakerCommand::NONE};
     WENCParams m_encodeParams;
-    WUT_UNKNOWN_BYTES(8);
     WPADChan m_channel;
     SpeakerCallback m_callback{nullptr};
     WUT_UNKNOWN_BYTES(4);

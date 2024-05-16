@@ -24,7 +24,7 @@ typedef enum WPADSpeakerCmd {
 
 struct WENCParams
 {
-    WUT_UNKNOWN_BYTES(24);
+    WUT_UNKNOWN_BYTES(32);
 };
 
 typedef void (*WPADControlSpeakerCallback)(WPADChan chan, int32_t status);

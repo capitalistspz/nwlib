@@ -181,7 +181,7 @@ void nw::snd::RemoteSpeaker::Update() {
     ExecCommand(command);
 }
 
-void nw::snd::RemoteSpeaker::UpdateStreamData(const short *samples) {
+void nw::snd::RemoteSpeaker::UpdateStreamData(const int16_t *samples) {
     uint8_t adpcmData[20];
     if (m_mode != SpeakerMode::READY)
         return;
