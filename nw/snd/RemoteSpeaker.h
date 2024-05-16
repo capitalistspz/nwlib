@@ -57,23 +57,23 @@ public:
     //! Update_Q3_2nw3snd13RemoteSpeakerFv
     void Update();
     //! UpdateStreamData_Q3_2nw3snd13RemoteSpeakerFCs
-    void UpdateStreamData(const int16_t *samples);
+    void UpdateStreamData(const int16_t* samples);
     //! ClearParam_Q3_2nw3snd13RemoteSpeakerFv
     void ClearParam();
 
     void InitParam();
 
     //! IsAllSampleZero__Q3_2nw3snd13RemoteSpeakerFPCs
-    BOOL IsAllSampleZero(const int16_t *samples) const;
+    BOOL IsAllSampleZero(const int16_t* samples) const;
 
     //! NotifyCallback__Q3_2nw3snd13RemoteSpeakerFiT1
     void NotifyCallback(WPADChan chan, int32_t result);
     //! Static methods
 public:
     //! ContinueAlarmHandler_Q3_2nw3snd13RemoteSpeakerSFP7OSAlarmP9OSContext
-    static void ContinueAlarmHandler(OSAlarm *alarm, OSContext *);
+    static void ContinueAlarmHandler(OSAlarm* alarm, OSContext*);
     //! IntervalAlarmHandler_Q3_2nw3snd13RemoteSpeakerSFP7OSAlarmP9OSContext
-    static void IntervalAlarmHandler(OSAlarm *alarm, OSContext *);
+    static void IntervalAlarmHandler(OSAlarm* alarm, OSContext*);
     //! SpeakerOnCallback__Q3_2nw3snd13RemoteSpeakerSFiT1
     static void SpeakerOnCallback(WPADChan chan, int32_t result);
     //! SpeakerOffCallback__Q3_2nw3snd13RemoteSpeakerSFiT1

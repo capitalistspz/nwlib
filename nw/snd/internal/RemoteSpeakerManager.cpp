@@ -21,15 +21,14 @@ void nw::snd::internal::RemoteSpeakerManager::Initialize() {
 }
 
 void nw::snd::internal::RemoteSpeakerManager::Finalize() {
-    if (m_initialized)
-    {
+    if (m_initialized) {
         OSCancelAlarm(&m_alarm);
         m_initialized = false;
     }
 }
 
-void nw::snd::internal::RemoteSpeakerManager::RemoteSpeakerAlarmProc(OSAlarm *alarm, OSContext *context) {
-    auto *manager = GetInstance();
+void nw::snd::internal::RemoteSpeakerManager::RemoteSpeakerAlarmProc(OSAlarm* alarm, OSContext* context) {
+    auto* manager = GetInstance();
     const auto samplesLeft = AXRmtGetSamplesLeft();
     int16_t samples[40];
     if (samplesLeft < 40)
@@ -42,10 +41,9 @@ void nw::snd::internal::RemoteSpeakerManager::RemoteSpeakerAlarmProc(OSAlarm *al
         manager->m_speakers[i].Update();
     }
     AXRmtAdvancePtr(40);
-
 }
 
-nw::snd::internal::RemoteSpeakerManager *nw::snd::internal::RemoteSpeakerManager::GetInstance() {
+nw::snd::internal::RemoteSpeakerManager* nw::snd::internal::RemoteSpeakerManager::GetInstance() {
     if (!s_initialized) {
         s_initialized = true;
         s_instance = RemoteSpeakerManager();
@@ -53,7 +51,6 @@ nw::snd::internal::RemoteSpeakerManager *nw::snd::internal::RemoteSpeakerManager
     return &s_instance;
 }
 
-nw::snd::RemoteSpeaker *nw::snd::internal::RemoteSpeakerManager::GetRemoteSpeaker(WPADChan chan) {
+nw::snd::RemoteSpeaker* nw::snd::internal::RemoteSpeakerManager::GetRemoteSpeaker(WPADChan chan) {
     return m_speakers + chan;
 }
-

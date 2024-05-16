@@ -14,13 +14,13 @@ public:
     //! Finalize__Q4_2nw3snd8internal20RemoteSpeakerManagerFv
     void Finalize();
     //! GetRemoteSpeaker__Q4_2nw3snd8internal20RemoteSpeakerManagerFi
-    RemoteSpeaker *GetRemoteSpeaker(WPADChan chan);
+    RemoteSpeaker* GetRemoteSpeaker(WPADChan chan);
     //! Static Methods
 public:
     //! GetInstance__Q4_2nw3snd8internal20RemoteSpeakerManagerSFv
-    static RemoteSpeakerManager *GetInstance();
+    static RemoteSpeakerManager* GetInstance();
     //! RemoteSpeakerAlarmProc__Q4_2nw3snd8internal20RemoteSpeakerManagerSFP7OSAlarmP9OSContext
-    static void RemoteSpeakerAlarmProc(OSAlarm *alarm, OSContext *context);
+    static void RemoteSpeakerAlarmProc(OSAlarm* alarm, OSContext* context);
     //! Fields
 public:
     bool m_initialized;

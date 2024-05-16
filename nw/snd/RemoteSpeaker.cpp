@@ -34,7 +34,7 @@ BOOL nw::snd::RemoteSpeaker::EnableOutput(bool enable) {
     if (!m_initialized)
         return FALSE;
     m_outputEnabled = true;
-    RemoteSpeaker *example;
+    RemoteSpeaker* example;
     return true;
 }
 
@@ -84,9 +84,9 @@ uint32_t nw::snd::RemoteSpeaker::GetContinuousPlayTime() const {
 }
 
 
-BOOL nw::snd::RemoteSpeaker::IsAllSampleZero(const short *samples) const {
+BOOL nw::snd::RemoteSpeaker::IsAllSampleZero(const short* samples) const {
     for (auto i = 0; i < 20; ++i, samples += 2) {
-        if (*reinterpret_cast<const int *>(samples) != 0) {
+        if (*reinterpret_cast<const int*>(samples) != 0) {
             return FALSE;
         }
     }
@@ -116,12 +116,12 @@ void nw::snd::RemoteSpeaker::NotifyCallback(WPADChan chan, int32_t result) {
     }
 }
 
-void nw::snd::RemoteSpeaker::ContinueAlarmHandler(OSAlarm *alarm, OSContext *context) {
+void nw::snd::RemoteSpeaker::ContinueAlarmHandler(OSAlarm* alarm, OSContext* context) {
     IntervalAlarmHandler(alarm, context);
 }
 
-void nw::snd::RemoteSpeaker::IntervalAlarmHandler(OSAlarm *alarm, OSContext *) {
-    auto *speaker = reinterpret_cast<RemoteSpeaker *>(OSGetAlarmUserData(alarm));
+void nw::snd::RemoteSpeaker::IntervalAlarmHandler(OSAlarm* alarm, OSContext*) {
+    auto* speaker = reinterpret_cast<RemoteSpeaker*>(OSGetAlarmUserData(alarm));
     if (!speaker->m_intervalAlarmRunning) {
         OSCancelAlarm(&speaker->m_continueAlarm);
         speaker->m_continueAlarmRunning = false;
@@ -130,8 +130,8 @@ void nw::snd::RemoteSpeaker::IntervalAlarmHandler(OSAlarm *alarm, OSContext *) {
 }
 
 void nw::snd::RemoteSpeaker::SpeakerOnCallback(WPADChan chan, int32_t result) {
-    auto *speakerManager = internal::RemoteSpeakerManager::GetInstance();
-    auto *speaker = speakerManager->GetRemoteSpeaker(chan);
+    auto* speakerManager = internal::RemoteSpeakerManager::GetInstance();
+    auto* speaker = speakerManager->GetRemoteSpeaker(chan);
     if (result == 0) {
         speaker->m_firstStream = true;
         OSBlockSet(&speaker->m_encodeParams, 0, 32);
@@ -147,8 +147,8 @@ void nw::snd::RemoteSpeaker::SpeakerOnCallback(WPADChan chan, int32_t result) {
 }
 
 void nw::snd::RemoteSpeaker::SpeakerOffCallback(WPADChan chan, int32_t result) {
-    auto *speakerManager = internal::RemoteSpeakerManager::GetInstance();
-    auto *speaker = speakerManager->GetRemoteSpeaker(chan);
+    auto* speakerManager = internal::RemoteSpeakerManager::GetInstance();
+    auto* speaker = speakerManager->GetRemoteSpeaker(chan);
     if (result == -2) {
         speaker->m_nextCmd = SpeakerCommand::FINALIZE;
     } else {
@@ -159,8 +159,8 @@ void nw::snd::RemoteSpeaker::SpeakerOffCallback(WPADChan chan, int32_t result) {
 }
 
 void nw::snd::RemoteSpeaker::SpeakerPlayCallback(WPADChan chan, int32_t result) {
-    auto *speakerManager = internal::RemoteSpeakerManager::GetInstance();
-    auto *speaker = speakerManager->GetRemoteSpeaker(chan);
+    auto* speakerManager = internal::RemoteSpeakerManager::GetInstance();
+    auto* speaker = speakerManager->GetRemoteSpeaker(chan);
     if (result == -2) {
         speaker->m_nextCmd = SpeakerCommand::PLAY;
     } else {
@@ -181,7 +181,7 @@ void nw::snd::RemoteSpeaker::Update() {
     ExecCommand(command);
 }
 
-void nw::snd::RemoteSpeaker::UpdateStreamData(const int16_t *samples) {
+void nw::snd::RemoteSpeaker::UpdateStreamData(const int16_t* samples) {
     uint8_t adpcmData[20];
     if (m_mode != SpeakerMode::READY)
         return;
@@ -224,4 +224,3 @@ void nw::snd::RemoteSpeaker::UpdateStreamData(const int16_t *samples) {
     }
     m_playing = shouldStreamData;
 }
-        
