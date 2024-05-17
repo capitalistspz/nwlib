@@ -186,7 +186,7 @@ void nw::snd::RemoteSpeaker::UpdateStreamData(const int16_t* samples) {
     if (m_mode != SpeakerMode::READY)
         return;
     bool shouldStreamData = true;
-    if (!m_outputEnabled || !IsAllSampleZero(samples))
+    if (!m_outputEnabled || IsAllSampleZero(samples))
         shouldStreamData = false;
     bool startContinueAlarm = false;
     if (!m_playing && shouldStreamData)
