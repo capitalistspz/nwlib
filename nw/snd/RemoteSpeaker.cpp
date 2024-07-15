@@ -151,11 +151,16 @@ void nw::snd::RemoteSpeaker::SpeakerOnCallback(WPADChan chan, int32_t result) {
 void nw::snd::RemoteSpeaker::SpeakerOffCallback(WPADChan chan, int32_t result) {
     auto* speakerManager = internal::RemoteSpeakerManager::GetInstance();
     auto* speaker = speakerManager->GetRemoteSpeaker(chan);
-    if (result == -2) {
+    if (result == 0)
+    {
+        speaker->m_mode = SpeakerMode::OFF;
+        speaker->NotifyCallback(chan, 0);
+    }
+    else if (result == -2) {
         speaker->m_nextCmd = SpeakerCommand::FINALIZE;
     } else {
-        speaker->m_mode = result == 0 ? SpeakerMode::OFF : SpeakerMode::UNKNOWN;
-        speaker->NotifyCallback(chan, 0);
+        speaker->m_mode = SpeakerMode::UNKNOWN;
+        speaker->NotifyCallback(chan, result);
     }
     speaker->m_cmdInProgress = false;
 }
@@ -163,11 +168,16 @@ void nw::snd::RemoteSpeaker::SpeakerOffCallback(WPADChan chan, int32_t result) {
 void nw::snd::RemoteSpeaker::SpeakerPlayCallback(WPADChan chan, int32_t result) {
     auto* speakerManager = internal::RemoteSpeakerManager::GetInstance();
     auto* speaker = speakerManager->GetRemoteSpeaker(chan);
+    if (result == 0)
+    {
+        speaker->m_mode = SpeakerMode::PLAY;
+        speaker->NotifyCallback(chan, 0);
+    }
     if (result == -2) {
         speaker->m_nextCmd = SpeakerCommand::PLAY;
     } else {
-        speaker->m_mode = result == 0 ? SpeakerMode::PLAY : SpeakerMode::UNKNOWN;
-        speaker->NotifyCallback(chan, 0);
+        speaker->m_mode = SpeakerMode::UNKNOWN;
+        speaker->NotifyCallback(chan, result);
     }
     speaker->m_cmdInProgress = false;
 }
