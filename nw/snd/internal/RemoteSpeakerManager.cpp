@@ -2,9 +2,7 @@
 #include "../notyetwut/sndcore2.h"
 
 nw::snd::internal::RemoteSpeakerManager::RemoteSpeakerManager() {
-    m_initialized = true;
     for (auto i = 0; i < 4; ++i) {
-        m_speakers[i] = RemoteSpeaker();
         m_speakers[i].m_channel = static_cast<WPADChan>(i);
     }
 }

@@ -23,7 +23,7 @@ public:
     static void RemoteSpeakerAlarmProc(OSAlarm* alarm, OSContext* context);
     //! Fields
 public:
-    bool m_initialized;
+    bool m_initialized {false};
     WUT_UNKNOWN_BYTES(7);
     OSAlarm m_alarm;
     RemoteSpeaker m_speakers[4];
