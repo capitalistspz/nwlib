@@ -21,6 +21,7 @@ void nw::snd::RemoteSpeaker::Initialize(nw::snd::RemoteSpeaker::SpeakerCallback 
 }
 
 void nw::snd::RemoteSpeaker::Finalize(SpeakerCallback callback) {
+    ClearParam();
     if (m_callback) {
         m_callback(m_channel, 0);
         m_notificationAvailable = false;
