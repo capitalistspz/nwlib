@@ -5,7 +5,7 @@ nw::snd::internal::RemoteSpeakerManager::RemoteSpeakerManager() {
     m_initialized = true;
     for (auto i = 0; i < 4; ++i) {
         m_speakers[i] = RemoteSpeaker();
-        m_speakers[i].m_channel = (WPADChan) i;
+        m_speakers[i].m_channel = static_cast<WPADChan>(i);
     }
 }
 
@@ -14,9 +14,7 @@ void nw::snd::internal::RemoteSpeakerManager::Initialize() {
         return;
     OSCreateAlarm(&m_alarm);
     const auto currentTime = OSGetTime();
-    auto a = (uint32_t) OSTimerClockSpeed / 0x7a12;
-    auto period = (uint64_t) (a * 0x65b9ab) / 320000;
-    OSSetPeriodicAlarm(&m_alarm, currentTime, period, RemoteSpeakerAlarmProc);
+    OSSetPeriodicAlarm(&m_alarm, currentTime, OSNanosecondsToTicks(6666667), RemoteSpeakerAlarmProc);
     m_initialized = true;
 }
 
@@ -34,7 +32,7 @@ void nw::snd::internal::RemoteSpeakerManager::RemoteSpeakerAlarmProc(OSAlarm* al
     if (samplesLeft < 40)
         return;
     for (auto i = 0; i < 4; ++i) {
-        if (manager->m_speakers[i].m_mode == RemoteSpeaker::SpeakerMode::READY) {
+        if (manager->m_speakers[i].m_mode == RemoteSpeaker::SpeakerMode::PLAY) {
             AXRmtGetSamples(i, samples, 40);
             manager->m_speakers[i].UpdateStreamData(samples);
         }

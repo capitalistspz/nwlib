@@ -17,11 +17,11 @@ private:
 
     enum class SpeakerMode : uint32_t {
         UNKNOWN = 0,
-        TURNING_ON = 1,
+        REQUESTING_ON = 1,
         ON = 2,
-        TURNING_READY = 3,
-        READY = 4,
-        TURNING_OFF = 5,
+        REQUESTING_PLAY = 3,
+        PLAY = 4,
+        REQUESTING_OFF = 5,
         OFF = 6
     };
     //! Types

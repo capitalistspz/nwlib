@@ -49,7 +49,7 @@ void nw::snd::RemoteSpeaker::ExecCommand(SpeakerCommand command) {
         return;
     if (command == SpeakerCommand::INITIALIZE) {
         m_cmdInProgress = true;
-        m_mode = (SpeakerMode) 1;
+        m_mode = SpeakerMode::REQUESTING_ON;
         m_notificationAvailable = true;
         WPADControlSpeaker(m_channel, WPAD_SPEAKER_CMD_ON, SpeakerOnCallback);
         return;
@@ -57,7 +57,7 @@ void nw::snd::RemoteSpeaker::ExecCommand(SpeakerCommand command) {
     if (command < SpeakerCommand::FINALIZE) {
         m_cmdInProgress = true;
         m_notificationAvailable = true;
-        m_mode = (SpeakerMode) 3;
+        m_mode = SpeakerMode::REQUESTING_PLAY;
         WPADControlSpeaker(m_channel, WPAD_SPEAKER_CMD_PLAY, SpeakerPlayCallback);
         return;
     }
@@ -65,20 +65,20 @@ void nw::snd::RemoteSpeaker::ExecCommand(SpeakerCommand command) {
         return;
     m_cmdInProgress = true;
     m_notificationAvailable = true;
-    m_mode = (SpeakerMode) 5;
+    m_mode = SpeakerMode::REQUESTING_OFF;
     WPADControlSpeaker(m_channel, WPAD_SPEAKER_CMD_OFF, SpeakerOffCallback);
 }
 
 bool nw::snd::RemoteSpeaker::IsPlaying() const {
-    if (m_mode != SpeakerMode::READY)
+    if (m_mode != SpeakerMode::PLAY)
         return false;
     return m_playing;
 }
 
 uint32_t nw::snd::RemoteSpeaker::GetContinuousPlayTime() const {
-    if (m_mode != SpeakerMode::READY && (m_continueAlarmRunning != 0)) {
-        const auto currentTime = (uint64_t) OSGetTime();
-        return OSTicksToMilliseconds(currentTime - (uint64_t) m_playStartTime);
+    if (m_mode != SpeakerMode::PLAY && m_continueAlarmRunning) {
+        const auto currentTime =  OSGetTime();
+        return OSTicksToMilliseconds(currentTime - m_playStartTime);
     }
     return 0;
 }
@@ -90,7 +90,7 @@ BOOL nw::snd::RemoteSpeaker::IsAllSampleZero(const short* samples) const {
             return FALSE;
         }
     }
-    return true;
+    return TRUE;
 }
 
 void nw::snd::RemoteSpeaker::ClearParam() {
@@ -117,12 +117,13 @@ void nw::snd::RemoteSpeaker::NotifyCallback(WPADChan chan, int32_t result) {
 }
 
 void nw::snd::RemoteSpeaker::ContinueAlarmHandler(OSAlarm* alarm, OSContext* context) {
-    IntervalAlarmHandler(alarm, context);
+    // Yes it actually does nothing with it
+    OSGetAlarmUserData(alarm);
 }
 
 void nw::snd::RemoteSpeaker::IntervalAlarmHandler(OSAlarm* alarm, OSContext*) {
     auto* speaker = reinterpret_cast<RemoteSpeaker*>(OSGetAlarmUserData(alarm));
-    if (!speaker->m_intervalAlarmRunning) {
+    if (speaker->m_intervalAlarmRunning) {
         OSCancelAlarm(&speaker->m_continueAlarm);
         speaker->m_continueAlarmRunning = false;
     }
@@ -164,7 +165,7 @@ void nw::snd::RemoteSpeaker::SpeakerPlayCallback(WPADChan chan, int32_t result) 
     if (result == -2) {
         speaker->m_nextCmd = SpeakerCommand::PLAY;
     } else {
-        speaker->m_mode = result == 0 ? SpeakerMode::READY : SpeakerMode::UNKNOWN;
+        speaker->m_mode = result == 0 ? SpeakerMode::PLAY : SpeakerMode::UNKNOWN;
         speaker->NotifyCallback(chan, 0);
     }
     speaker->m_cmdInProgress = false;
@@ -183,7 +184,7 @@ void nw::snd::RemoteSpeaker::Update() {
 
 void nw::snd::RemoteSpeaker::UpdateStreamData(const int16_t* samples) {
     uint8_t adpcmData[20];
-    if (m_mode != SpeakerMode::READY)
+    if (m_mode != SpeakerMode::PLAY)
         return;
     bool shouldStreamData = true;
     if (!m_outputEnabled || IsAllSampleZero(samples))
@@ -195,8 +196,8 @@ void nw::snd::RemoteSpeaker::UpdateStreamData(const int16_t* samples) {
     if (m_playing & !shouldStreamData)
         startIntervalAlarm = true;
     if (shouldStreamData) {
-        bool canSendStreamData = WPADCanSendStreamData(m_channel);
-        if (!canSendStreamData)
+        BOOL canSendStreamData = WPADCanSendStreamData(m_channel);
+        if (canSendStreamData == FALSE)
             return;
         bool continuing = m_firstStream;
         m_firstStream = false;
@@ -206,11 +207,12 @@ void nw::snd::RemoteSpeaker::UpdateStreamData(const int16_t* samples) {
             m_mode = SpeakerMode::UNKNOWN;
             m_nextCmd = SpeakerCommand::INITIALIZE;
             InitParam();
+            return;
         }
     }
     if (startContinueAlarm) {
         if (!m_continueAlarmRunning) {
-            OSSetAlarm(&m_continueAlarm, OSTimerClockSpeed * 480, ContinueAlarmHandler);
+            OSSetAlarm(&m_continueAlarm, OSSecondsToTicks(480), ContinueAlarmHandler);
             m_playStartTime = OSGetTime();
             m_continueAlarmRunning = true;
         }
@@ -220,7 +222,7 @@ void nw::snd::RemoteSpeaker::UpdateStreamData(const int16_t* samples) {
     if (startIntervalAlarm) {
         m_intervalAlarmRunning = true;
         OSCancelAlarm(&m_intervalAlarm);
-        OSSetAlarm(&m_intervalAlarm, OSTimerClockSpeed * 1, IntervalAlarmHandler);
+        OSSetAlarm(&m_intervalAlarm, OSSecondsToTicks(1), IntervalAlarmHandler);
     }
     m_playing = shouldStreamData;
 }
