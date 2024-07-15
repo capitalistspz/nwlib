@@ -13,8 +13,6 @@ class RemoteSpeaker {
     friend class internal::RemoteSpeakerManager;
     //! Non-exports
 private:
-    using SpeakerCallback = void (*)(int32_t, int32_t);
-
     enum class SpeakerMode : uint32_t {
         UNKNOWN = 0,
         REQUESTING_ON = 1,
@@ -26,6 +24,8 @@ private:
     };
     //! Types
 public:
+    using SpeakerCallback = void (*)(WPADChan chan, int32_t result);
+
     enum class SpeakerCommand : uint32_t {
         NONE = 0,
         INITIALIZE = 1,
